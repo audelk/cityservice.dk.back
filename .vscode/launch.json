@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible Node.js debug attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            //"restart": true,
+            "name": "Launch Program",
+           "program": "${workspaceRoot}\\index.js","outputCapture": "std",
+            "protocol": "auto",  
+         //   "restart": true,
+           // "runtimeExecutable": "nodemon","console": "integratedTerminal"
+            //"runtimeExecutable": "C:/Users/ASUS/AppData/Roaming/nvm/v14.3.0/node64"          
+          //  "port": 9229
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Attach",
+        //    "program": "${workspaceRoot}\\app.js",
+            "protocol": "auto",            
+           // "port": 5858
+        }
+    ]
+    
+  }

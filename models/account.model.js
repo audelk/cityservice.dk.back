@@ -1,5 +1,8 @@
-import { Mongoose } from "mongoose";
-const statuses = [{
+import mongoose from "mongoose";
+import validator from "validator";
+
+import { toJSON, paginate } from "./plugins/index.js";
+export const statuses = [{
         id: '9a67dff7-3c38-4052-a335-0cef93438ff6',
         title: 'Active',
         slug: 'active'
@@ -30,7 +33,7 @@ const statuses = [{
         slug: 'boarding'
     }
 ];
-const accountSchema = Mongoose.Schema({
+export const accountSchema = mongoose.Schema({
         fullName: {
             type: String,
             required: true,
@@ -69,12 +72,17 @@ const accountSchema = Mongoose.Schema({
             maxlength: 200,
         },
         status: {
-            type: string,
+            type: String,
             enum: statuses.map(item => item.slug),
             default: 'paused'
-
         },
-
+        registrationProcess: {
+            type: String,
+            enum: ['registration', 'subscription', 'synching', 'completed'],
+            default: 'registration'
+        },
+        addedAt: Date,
+        updatedAt: Date
     })
     // add plugin that converts mongoose to json
 accountSchema.plugin(toJSON);
@@ -91,6 +99,4 @@ accountSchema.statics.isEmailTaken = async function(email, excludeUserId) {
     return !!user;
 };
 
-const LIAccount = mongoose.model('LIAccount', accountSchema);
-
-export { LIAccount };
+export const Account = mongoose.model('LIAccount', accountSchema);

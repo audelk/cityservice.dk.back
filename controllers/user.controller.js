@@ -4,10 +4,13 @@ import ApiError from "../utils/ApiError.js";
 import catchAsync from "../utils/catchAsync.js";
 import { userService } from "../services/index.js";
 
-const createUser = catchAsync(async(req, res) => {
-    const user = await userService.createUser(req.body);
-    res.status(httpStatus.CREATED).send(user);
-});
+const createUser = catchAsync(
+    async(req, res) => {
+        const user = await userService.createUser(req.body);
+        res.status(httpStatus.CREATED).send(user);
+    }
+
+);
 
 const getUsers = catchAsync(async(req, res) => {
     const filter = pick(req.query, ['name', 'role']);

@@ -16,7 +16,7 @@ const defaultRoutes = [{
         route: userRoute,
     },
     {
-        path: 'accounts',
+        path: '/accounts',
         route: accountRoute
     }
 ];
