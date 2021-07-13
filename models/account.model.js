@@ -76,14 +76,17 @@ export const accountSchema = mongoose.Schema({
             enum: statuses.map(item => item.slug),
             default: 'paused'
         },
-        registrationProcess: {
+        registrationProgress: {
             type: String,
             enum: ['registration', 'subscription', 'synching', 'completed'],
             default: 'registration'
         },
-        addedAt: Date,
-        updatedAt: Date
-    })
+        linkedLoginStatus: {
+            type: String,
+            default: 'loggedin'
+        }
+
+    }, { timestamps: true })
     // add plugin that converts mongoose to json
 accountSchema.plugin(toJSON);
 accountSchema.plugin(paginate);

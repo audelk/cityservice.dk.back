@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import { User } from "../models/index.js";
 import ApiError from "../utils/ApiError.js";
-
+import mongoose from "mongoose";
 /**
  * Create a user
  * @param {Object} userBody
