@@ -3,7 +3,8 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 import { toJSON, paginate } from "./plugins/index.js";
 import { roles } from "../config/roles.js";
-import { SchemaTypes } from "mongoose";
+const { Schema } = mongoose;
+
 const userSchema = mongoose.Schema({
     name: {
         type: String,
@@ -65,7 +66,7 @@ const userSchema = mongoose.Schema({
         default: false,
     },
     accounts: {
-        type: [SchemaTypes.ObjectId],
+        type: [Schema.Types.ObjectId],
         ref: 'LIAccount'
     }
 }, {
@@ -82,7 +83,7 @@ userSchema.plugin(paginate);
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-userSchema.statics.isEmailTaken = async function(email, excludeUserId) {
+userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
     const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
     return !!user;
 };
@@ -92,12 +93,12 @@ userSchema.statics.isEmailTaken = async function(email, excludeUserId) {
  * @param {string} password
  * @returns {Promise<boolean>}
  */
-userSchema.methods.isPasswordMatch = async function(password) {
+userSchema.methods.isPasswordMatch = async function (password) {
     const user = this;
     return bcrypt.compare(password, user.password);
 };
 
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
     const user = this;
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8);
@@ -105,12 +106,12 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
-userSchema.methods.getAccounts = async function() {
-        return AccountService.
-    }
-    /**
-     * @typedef User
-     */
+userSchema.methods.getAccounts = async function () {
+    //  return AccountService.
+}
+/**
+ * @typedef User
+ */
 const User = mongoose.model('User', userSchema);
 
 export default User;
