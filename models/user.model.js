@@ -3,7 +3,7 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 import { toJSON, paginate } from "./plugins/index.js";
 import { roles } from "../config/roles.js";
-
+import { SchemaTypes } from "mongoose";
 const userSchema = mongoose.Schema({
     name: {
         type: String,
@@ -64,6 +64,10 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    accounts: {
+        type: [SchemaTypes.ObjectId],
+        ref: 'LIAccount'
+    }
 }, {
     timestamps: true,
 });
@@ -101,9 +105,12 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
-/**
- * @typedef User
- */
+userSchema.methods.getAccounts = async function() {
+        return AccountService.
+    }
+    /**
+     * @typedef User
+     */
 const User = mongoose.model('User', userSchema);
 
 export default User;

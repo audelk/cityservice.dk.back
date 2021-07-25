@@ -1,6 +1,7 @@
+import { json } from "express";
 import mongoose from "mongoose";
 import validator from "validator";
-
+const { Schema } = mongoose;
 import { toJSON, paginate } from "./plugins/index.js";
 export const statuses = [{
         id: '9a67dff7-3c38-4052-a335-0cef93438ff6',
@@ -33,6 +34,16 @@ export const statuses = [{
         slug: 'boarding'
     }
 ];
+export const contractSchema = mongoose.Schema({
+    contractId: {
+        type: String,
+        maxlength: 200
+    },
+    seatUrn: { type: String, maxlength: 200 },
+    name: { type: String, maxlength: 200 },
+    description: { type: String, maxlength: 200 },
+    cookiesStr: { type: String },
+});
 export const accountSchema = mongoose.Schema({
         fullName: {
             type: String,
@@ -81,11 +92,53 @@ export const accountSchema = mongoose.Schema({
             enum: ['registration', 'subscription', 'synching', 'completed'],
             default: 'registration'
         },
-        linkedLoginStatus: {
-            type: String,
-            default: 'loggedin'
-        }
+        loginStatus: {
+            type: String
+        },
+        proxy: {
+            type: Schema.Types.ObjectId,
+            ref: "Proxy"
+        },
+        linkedAccess: {
+            csrfToken: {
+                type: String
+            },
+            cookiesStr: {
+                type: String
+            },
+            loginStatus: {
+                type: String
+            },
 
+            linkedToken: {
+                type: String
+            },
+            browserId: {
+                type: Number
+            },
+            verificationUrl: {
+                type: String
+            },
+            verificationDate: {
+                type: Date
+            },
+            cookies: {
+                type: Schema.Types.Mixed
+            }
+        },
+        contracts: {
+            type: [contractSchema]
+        },
+        subscription: {
+            type: Schema.Types.Mixed
+        },
+        invoices: {
+            type: [Schema.Types.Mixed]
+        },
+        owners: {
+            type: [Schema.Types.ObjectId],
+            ref: 'User'
+        }
     }, { timestamps: true })
     // add plugin that converts mongoose to json
 accountSchema.plugin(toJSON);

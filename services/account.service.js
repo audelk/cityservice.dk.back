@@ -1,13 +1,16 @@
 import httpStatus from "http-status";
 import ApiError from "../utils/ApiError.js";
 import { Account, statuses, accountSchema } from '../models/account.model.js';
-export default class AccountServicce {
+import { Proxy } from "../models/proxy.model.js";
+export default class AccountService {
 
-    static async create(fields) {
+    static async createAndSave(fields) {
         if (await Account.isEmailTaken(fields.email)) {
             throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
         } else {
-            return Account.create(fields);
+            const account = await Account.create(fields);
+            account.save();
+            return account;
         }
     }
 
@@ -24,6 +27,12 @@ export default class AccountServicce {
             throw new ApiError(httpStatus.BAD_REQUEST, httpStatus[httpStatus.BAD_REQUEST]);
         return model;
     }
+    static async find(field) {
+        let model = await Account.findOne(field);
+        if (!model)
+            throw new ApiError(httpStatus.NOT_FOUND, httpStatus[httpStatus.NOT_FOUND]);
+        return model;
+    }
 
     static async update(id, fields) {
         let model = await Account.findById(id);
@@ -33,6 +42,10 @@ export default class AccountServicce {
         Object.assign(model, fields);
         await model.save();
         return model;
+    }
+
+    static async isAccountExist(email) {
+        return await Account.isEmailTaken(email);
     }
 
     static async search(query) {
@@ -46,8 +59,10 @@ export default class AccountServicce {
             models = await Account.find({
                 [type]: registrationProgress
             });
-        } else {
+        } else if (keyword) {
             models = await Account.find({ $or: [{ fullName: { $regex: `.*${keyword}.*` } }, { email: { $regex: `.*${keyword}.*` } }, { remarks: { $regex: `.*${keyword}.*` } }] });
+        } else {
+            models = await Account.find();
         }
         if (!models)
             throw new ApiError(httpStatus.BAD_REQUEST, httpStatus[httpStatus.BAD_REQUEST]);

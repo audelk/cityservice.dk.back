@@ -27,7 +27,8 @@ const envVarsSchema = Joi.object()
         SMTP_PASSWORD: Joi.string().description('password for email server'),
         APP_URL: Joi.string().description('app main url'),
         APP_NAME: Joi.string().description('app name '),
-        FRONT_APP_URL: Joi.string().description('app name ')
+        FRONT_APP_URL: Joi.string().description('app name '),
+        LINKED_APP_URL: Joi.string().description('app name '),
     })
     .unknown();
 
@@ -70,6 +71,10 @@ const config = {
     },
     appUrl: envVars.APP_URL,
     appName: envVars.APP_NAME,
-    appFrontUrl: envVars.FRONT_APP_URL
+    appFrontUrl: envVars.FRONT_APP_URL,
+    linkedAppUrl: envVars.LINKED_APP_URL,
+    paddleVendorId: envVars.PADDLE_VENDOR_ID,
+    paddleAuthCode: envVars.PADDLE_AUTH_CODE,
+    paddleAPIUrl: envVars.PADDLE_API_URL
 }
 export default config;

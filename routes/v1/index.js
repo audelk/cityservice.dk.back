@@ -4,8 +4,9 @@ import userRoute from "./user.route.js";
 import docsRoute from "./docs.route.js";
 import accountRoute from "./account.route.js";
 import config from "../../config/config.js";
-
+import paddleRoute from "./paddle.route.js";
 const router = express.Router();
+
 
 const defaultRoutes = [{
         path: '/auth',
@@ -18,7 +19,12 @@ const defaultRoutes = [{
     {
         path: '/accounts',
         route: accountRoute
+    },
+    {
+        path: '/paddle',
+        route: paddleRoute
     }
+
 ];
 
 const devRoutes = [
