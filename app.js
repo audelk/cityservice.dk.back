@@ -41,6 +41,9 @@ app.use(compression());
 app.use(cors());
 app.options('*', cors());
 
+// public
+app.use('/web', express.static('public'));
+
 // jwt authentication
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);

@@ -94,6 +94,7 @@ export default class PaddleController {
                 //*account.subscription.remove();
                 account.subscription = undefined;
                 delete account.subscription;
+                account.status = "paused";
                 account.markModified('subscription');
                 account.save();
             } else

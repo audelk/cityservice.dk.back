@@ -9,14 +9,16 @@ const userRoute = express.Router();
 userRoute
     .route('/')
     .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
-    .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
+    .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers)
+userRoute
+    .route('/me')
+    .get(auth('getUsers'), userController.getMe);
 
 userRoute
     .route('/:userId')
     .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
-    .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
+    .put(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
     .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
-
 export default userRoute;
 
 /**

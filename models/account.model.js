@@ -135,10 +135,18 @@ export const accountSchema = mongoose.Schema({
         invoices: {
             type: [Schema.Types.Mixed]
         },
+        creator: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        },
         owners: {
             type: [Schema.Types.ObjectId],
             ref: 'User'
+        },
+        profile: {
+            type: Schema.Types.Mixed
         }
+
     }, { timestamps: true })
     // add plugin that converts mongoose to json
 accountSchema.plugin(toJSON);

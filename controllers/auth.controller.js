@@ -4,6 +4,7 @@ import { authService, userService, tokenService, emailService } from "../service
 import config from "../config/config.js";
 const register = catchAsync(async(req, res) => {
     const user = await userService.createUser(req.body);
+
     const tokens = await tokenService.generateAuthTokens(user);
     if (config.registration.emailVerification == true) {
         const verifyEmailToken = await tokenService.generateVerifyEmailToken(user);

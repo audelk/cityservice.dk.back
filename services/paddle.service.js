@@ -28,6 +28,7 @@ export default class PaddleService {
 
         } = body;
         await AccountService.update(passthrough, {
+            status: "active",
             subscription: {
                 user_id,
                 subscription_id,

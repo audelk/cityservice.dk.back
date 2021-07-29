@@ -78,6 +78,14 @@ const deleteUserById = async(userId) => {
     await user.remove();
     return user;
 };
+
+const checkApiKey = async(apiKey) => {
+    const user = await User.getUserByApiKey(apiKey);
+    if (!user) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'INVALID_API_KEY');
+    }
+    return user;
+}
 const userService = {
     createUser,
     queryUsers,
@@ -85,5 +93,6 @@ const userService = {
     getUserByEmail,
     updateUserById,
     deleteUserById,
+    checkApiKey
 };
 export default userService;

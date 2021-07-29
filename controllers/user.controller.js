@@ -22,11 +22,17 @@ const getUsers = catchAsync(async(req, res) => {
 const getUser = catchAsync(async(req, res) => {
     const user = await userService.getUserById(req.params.userId);
     if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+        throw new ApiError(httpStatus.NOT_FOUND, 'INVALID_USER');
     }
     res.send(user);
 });
-
+const getMe = catchAsync(async(req, res) => {
+    const user = await userService.getUserById(res.locals.user.id);
+    if (!user) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'INVALID_USER');
+    }
+    res.send(user);
+});
 const updateUser = catchAsync(async(req, res) => {
     const user = await userService.updateUserById(req.params.userId, req.body);
     res.send(user);
@@ -36,11 +42,18 @@ const deleteUser = catchAsync(async(req, res) => {
     await userService.deleteUserById(req.params.userId);
     res.status(httpStatus.NO_CONTENT).send();
 });
+
+const getAccounts = catchAsync(async(req, res) => {
+    let accounts = await userService.getAccounts(req.params.userId);
+    res.status(httpStatus.OK).send(accounts);
+});
 const userController = {
     createUser,
     getUsers,
     getUser,
     updateUser,
     deleteUser,
+    getAccounts,
+    getMe
 };
 export default userController;
