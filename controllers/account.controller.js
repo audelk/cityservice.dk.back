@@ -16,11 +16,16 @@ export class AccountController {
      */
     static create = catchAsync(
         async(req, res) => {
+            const user = res.locals.user;
+            req.body.creator = user.id;
             if (await AccountService.isAccountExist(req.body.email)) {
                 throw new ApiError(httpStatus.BAD_REQUEST, "ACCOUNT_ALREADY_EXIST");
             }
             const proxy = await Proxy.findAvailable();
             const account = await _createAccount(req.body, proxy);
+            user.accounts.addToSet(account.id);
+            user.markModified("accounts");
+            await user.save();
             const { loginStatus, linkedToken } = account.linkedAccess;
             res.status(httpStatus.CREATED).send({ loginStatus, linkedToken });
         });
@@ -98,7 +103,8 @@ export class AccountController {
      */
     static delete = catchAsync(
         async(req, res) => {
-            const account = await AccountService.delete(req.params.id);
+            const user = res.locals.user;
+            const account = await AccountService.delete(req.params.id, user.id);
             res.status(httpStatus.OK).send(account);
         });
 
@@ -106,8 +112,10 @@ export class AccountController {
      * get account by id
      */
     static get = catchAsync(
+
         async(req, res) => {
-            const account = await AccountService.get(req.params.id);
+            const user = res.locals.user;
+            const account = await AccountService.get(req.params.id, user.id);
             res.status(httpStatus.OK).send(account);
         });
 
@@ -116,7 +124,8 @@ export class AccountController {
      */
     static update = catchAsync(
         async(req, res) => {
-            const account = await AccountService.update(req.params.id, req.body);
+            const user = res.locals.user;
+            const account = await AccountService.update(req.params.id, req.body, user.id);
             res.status(httpStatus.OK).send(account);
         });
 
@@ -125,7 +134,8 @@ export class AccountController {
      */
     static search = catchAsync(
         async(req, res) => {
-            const results = await AccountService.search(req.query);
+            const results = await AccountService.search(res.locals.user.id, req.query);
+            //let temp = await res.locals.user.populate("accounts").execPopulate();
             res.status(httpStatus.OK).send(results);
         });
 };
@@ -169,9 +179,12 @@ async function _checkVerification(account, proxy) {
     return result;
 }
 
-async function _createAccount({ email, password, remarks, fullName, timeZone }, proxy) {
+async function _createAccount({ email, password, remarks, fullName, timeZone, creator }, proxy) {
     const linkedAccess = await LinkedApp.login({ email, password, proxy });
-    const account = await AccountService.createAndSave({ remarks, fullName, timeZone, email, password, linkedAccess, proxy: proxy.id });
+    const account = await AccountService.createAndSave({ remarks, fullName, timeZone, email, password, linkedAccess, creator, proxy: proxy.id });
+    account.owners.addToSet(creator);
+    account.markModified("owners");
+    await account.save();
     if (linkedAccess.loginStatus == LinkedinMessages.LOGGED_IN)
         await _processContracts(account);
     return account;

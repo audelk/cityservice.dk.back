@@ -2,9 +2,12 @@ import httpStatus from "http-status";
 import catchAsync from "../utils/catchAsync.js";
 import { authService, userService, tokenService, emailService } from "../services/index.js";
 import config from "../config/config.js";
+import { Helpers } from "../utils/linkedHelper.js";
 const register = catchAsync(async(req, res) => {
     const user = await userService.createUser(req.body);
-
+    user.apiKeys.addToSet({ apiKey: Helpers.randomString(30), title: "Default Key" });
+    user.markModified('apiKeys')
+    await user.save();
     const tokens = await tokenService.generateAuthTokens(user);
     if (config.registration.emailVerification == true) {
         const verifyEmailToken = await tokenService.generateVerifyEmailToken(user);

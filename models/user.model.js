@@ -13,13 +13,7 @@ const userSchema = mongoose.Schema({
         maxlength: 200,
         minlength: 5
     },
-    username: {
-        type: String,
-        required: true,
-        trim: true,
-        maxlength: 20,
-        minlength: 5
-    },
+
     avatar: {
         type: String,
         required: false,
@@ -68,6 +62,9 @@ const userSchema = mongoose.Schema({
     accounts: {
         type: [Schema.Types.ObjectId],
         ref: 'LIAccount'
+    },
+    apiKeys: {
+        type: [Schema.Types.Mixed]
     }
 }, {
     timestamps: true,

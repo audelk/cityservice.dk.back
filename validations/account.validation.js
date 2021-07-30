@@ -62,7 +62,8 @@ const searchAccount = {
 async function verifyLinkedToken(req, res, next) {
 
     try {
-        let account = await AccountService.find({ "linkedAccess.linkedToken": req.query.linkedToken });
+        const user = res.locals.user;
+        let account = await AccountService.find({ owners: user.id, "linkedAccess.linkedToken": req.query.linkedToken });
         res.locals.account = account;
         next();
     } catch (err) {

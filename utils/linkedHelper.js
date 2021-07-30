@@ -141,7 +141,7 @@ export class Helpers {
      * @param  str haystack 
      * @param  mapObj 
      */
-    replaceAll(str, mapObj) {
+    static replaceAll(str, mapObj) {
         var re = new RegExp(Object.keys(mapObj).join("|"), "gi");
         return str.replace(re, function(matched) {
 
@@ -153,16 +153,16 @@ export class Helpers {
      * promisfy settimeout
      * @param  ms 
      */
-    timeout(ms) {
+    static timeout(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
 
-    randomize(min, max) {
+    static randomize(min, max) {
 
         return (Math.floor(Math.random() * (max - min + 1)) + min);
     }
-    splitGetLastItem(str, s) {
+    static splitGetLastItem(str, s) {
         let r;
         str.split(s).map((item, index, thisArg) => {
             if (index == (thisArg.length - 1)) {
@@ -173,7 +173,7 @@ export class Helpers {
         return r
     }
 
-    splitGetFirstItem(str, s) {
+    static splitGetFirstItem(str, s) {
         let r;
         let temp = str.split(s);
         if (temp.length > 0)
@@ -183,14 +183,14 @@ export class Helpers {
         return r
     }
 
-    randomString(length) {
+    static randomString(length) {
         var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345678";
         var result = '';
         for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
         return result;
     }
 
-    randomNum(length) {
+    static randomNum(length) {
         var chars = "0123456789";
         var result = '';
         for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
