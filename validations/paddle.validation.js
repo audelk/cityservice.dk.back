@@ -6,30 +6,26 @@ const updateSubscription = {
     body: Joi.object().keys({
         newPlanId: Joi.number().integer().required(),
     }),
-    params: Joi.object().keys({
-        id: Joi.string().custom(objectId)
+    query: Joi.object().keys({
+        accountId: Joi.string().custom(objectId)
     })
 };
 const subcriptionPayments = {
-    params: Joi.object().keys({
-        id: Joi.string().custom(objectId).required()
+    query: Joi.object().keys({
+        accountId: Joi.string().custom(objectId).required()
     })
 };
 
 
 
 async function verifyAccount(req, res, next) {
-
     try {
-        let account = await AccountService.get(req.params.id);
+        const user = res.locals.user;
+        let account = await AccountService.find({ owners: user.id, "_id": req.query.accountId });
         res.locals.account = account;
         next();
     } catch (err) {
-        if (err.statusCode == 404) {
-            next(new ApiError(httpStatus.BAD_REQUEST, "Invalid Account"));
-        } else
-            next(err);
-
+        next(err);
     }
 }
 const paddleValidation = {

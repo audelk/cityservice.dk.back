@@ -5,6 +5,8 @@ import AccountService from "../services/account.service.js";
 import ApiError from "../utils/ApiError.js";
 import httpStatus from "http-status";
 import { Proxy } from "../models/proxy.model.js";
+import LinkedService from "../services/linkedin.service.js";
+import { LinkedinMessages } from "../utils/linkedHelper.js";
 const createAccount = {
     body: Joi.object().keys({
             email: Joi.string().required().email(),
@@ -24,13 +26,13 @@ const linkedToken = {
 
 }
 const deleteAccount = {
-    params: Joi.object().keys({
-        id: Joi.string().custom(objectId),
+    query: Joi.object().keys({
+        accountId: Joi.string().custom(objectId),
     }),
 };
 const updateAccount = {
-    params: Joi.object().keys({
-        id: Joi.string().custom(objectId),
+    query: Joi.object().keys({
+        accountId: Joi.string().custom(objectId),
     }),
     body: Joi.object().keys({
         password: Joi.string().min(5).max(200),
@@ -39,8 +41,8 @@ const updateAccount = {
     })
 };
 const getAccount = {
-    params: Joi.object().keys({
-        id: Joi.string().custom(objectId),
+    query: Joi.object().keys({
+        accountId: Joi.string().custom(objectId),
     }),
 };
 const searchAccount = {
@@ -75,6 +77,31 @@ async function verifyLinkedToken(req, res, next) {
     }
 }
 
+async function checkAccount(req, res, next) {
+    try {
+        const user = res.locals.user;
+        let account = await AccountService.find({ owners: user.id, "_id": req.query.accountId });
+        res.locals.account = account;
+        next();
+    } catch (err) {
+        next(err);
+    }
+}
+
+async function checkCookies(req, res, next) {
+    try {
+        const { linkedAccess } = res.locals.account;
+        if (linkedAccess) {
+            await LinkedService.getBasicProfile(linkedAccess.csrfToken, linkedAccess.cookiesStr);
+            next();
+        } else {
+            next(new ApiError(httpStatus.UNAUTHORIZED, LinkedinMessages.LINKEDIN_ACCESS_NOT_SET));
+        }
+    } catch (err) {
+        next(err);
+    }
+}
+
 const getContract = {
     params: Joi.object().keys({
         id: Joi.custom(objectId),
@@ -95,9 +122,20 @@ const checkVerification = {
 };
 
 const verification = {
-    query: linkedToken.query,
+    query: Joi.object().keys({
+        accountId: Joi.custom(objectId),
+    }),
     body: Joi.object().keys({
         code: Joi.string().required().min(2).max(10),
+    }),
+};
+const getConnections = {
+    params: Joi.object().keys({
+        id: Joi.custom(objectId),
+    }),
+    query: Joi.object().keys({
+        page: Joi.number().min(1).max(1000),
+        sortType: Joi.string().valid(...['RECENTLY_ADDED', 'LASTNAME_FIRSTNAME', 'FIRSTNAME_LASTNAME']),
     }),
 };
 const accountValidation = {
@@ -111,7 +149,10 @@ const accountValidation = {
     getContract,
     loginContract,
     verification,
-    verifyLinkedToken
+    verifyLinkedToken,
+    checkAccount,
+    checkCookies,
+    getConnections
 
 }
 export default accountValidation;

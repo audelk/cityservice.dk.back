@@ -44,12 +44,17 @@ export default class AccountService {
             throw new ApiError(httpStatus.BAD_REQUEST, httpStatus[httpStatus.BAD_REQUEST]);
         return model;
     }
-
-    /**
-     * 
-     * @param {object} field 
-     * @returns object account
-     */
+    static async getById(id) {
+            let model = await Account.findOne({ "_id": id });
+            if (!model)
+                throw new ApiError(httpStatus.BAD_REQUEST, httpStatus[httpStatus.BAD_REQUEST]);
+            return model;
+        }
+        /**
+         * 
+         * @param {object} field 
+         * @returns object account
+         */
     static async find(field) {
         let model = await Account.findOne(field);
         if (!model)
@@ -73,7 +78,15 @@ export default class AccountService {
         await model.save();
         return model;
     }
-
+    static async updateById(id, fields) {
+        let model = await Account.findOne({ "_id": id });
+        if (!model) {
+            throw new ApiError(httpStatus.BAD_REQUEST, httpStatus[httpStatus.BAD_REQUEST]);
+        }
+        Object.assign(model, fields);
+        await model.save();
+        return model;
+    }
     static async isAccountExist(email) {
         return await Account.isEmailTaken(email);
     }

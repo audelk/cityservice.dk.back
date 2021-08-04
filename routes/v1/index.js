@@ -6,6 +6,7 @@ import accountRoute from "./account.route.js";
 import config from "../../config/config.js";
 import paddleRoute from "./paddle.route.js";
 import userService from "../../services/user.service.js";
+import memberRoute from "./member.route.js";
 const router = express.Router();
 
 
@@ -21,10 +22,10 @@ const defaultRoutes = [{
 
 const devRoutes = [
     // routes available only in development mode
-    {
-        path: '/docs',
-        route: docsRoute,
-    },
+    // {
+    //   path: '/docs',
+    //  route: docsRoute,
+    // },
 ];
 
 defaultRoutes.forEach((route) => {
@@ -38,7 +39,9 @@ if (config.env === 'development') {
     });
 }
 router.use('/accounts', checkApiKey, accountRoute);
-router.use('/paddle', checkApiKey, paddleRoute);
+router.use('/paddle', paddleRoute);
+router.use('/members', checkApiKey, memberRoute);
+
 
 export default router;
 

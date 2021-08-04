@@ -1,15 +1,15 @@
 import httpStatus from "http-status";
 import AccountService from '../services/account.service.js';
 import catchAsync from "../utils/catchAsync.js";
-import config from "../config/config.js";
 import LinkedApp from "../services/linked-app.service.js";
 import ApiError from "../utils/ApiError.js";
 import { log } from "console";
 import { LinkedinMessages } from '../utils/linkedHelper.js';
 import { Proxy } from '../models/proxy.model.js';
-import { nextTick } from "process";
-
+import LinkedService from "../services/linkedin.service.js";
+import PublicAccountModel from "../models/linkedin/public.account.model.js";
 export class AccountController {
+
 
     /**
      * Register linkedin account. Retrieve token and cookies as well as contracts/premium cookies.
@@ -26,8 +26,8 @@ export class AccountController {
             user.accounts.addToSet(account.id);
             user.markModified("accounts");
             await user.save();
-            const { loginStatus, linkedToken } = account.linkedAccess;
-            res.status(httpStatus.CREATED).send({ loginStatus, linkedToken });
+            const { loginStatus } = account.linkedAccess;
+            res.status(httpStatus.CREATED).send({ loginStatus, id: account.id });
         });
 
     /**
@@ -104,7 +104,7 @@ export class AccountController {
     static delete = catchAsync(
         async(req, res) => {
             const user = res.locals.user;
-            const account = await AccountService.delete(req.params.id, user.id);
+            const account = await AccountService.delete(req.query.accountId, user.id);
             res.status(httpStatus.OK).send(account);
         });
 
@@ -115,7 +115,8 @@ export class AccountController {
 
         async(req, res) => {
             const user = res.locals.user;
-            const account = await AccountService.get(req.params.id, user.id);
+            let account = await AccountService.get(req.query.accountId, user.id);
+            account = new PublicAccountModel(account);
             res.status(httpStatus.OK).send(account);
         });
 
@@ -125,7 +126,7 @@ export class AccountController {
     static update = catchAsync(
         async(req, res) => {
             const user = res.locals.user;
-            const account = await AccountService.update(req.params.id, req.body, user.id);
+            const account = await AccountService.update(req.query.accountId, req.body, user.id);
             res.status(httpStatus.OK).send(account);
         });
 
@@ -134,10 +135,72 @@ export class AccountController {
      */
     static search = catchAsync(
         async(req, res) => {
-            const results = await AccountService.search(res.locals.user.id, req.query);
+            let results = await AccountService.search(res.locals.user.id, req.query);
             //let temp = await res.locals.user.populate("accounts").execPopulate();
+            results = results.map(item => { return new PublicAccountModel(item) });
             res.status(httpStatus.OK).send(results);
         });
+
+
+    /**
+     * Get basic profile data
+     */
+    static getBasicProfile = catchAsync(
+        async(req, res) => {
+            const { linkedAccess: { csrfToken }, linkedAccess: { cookiesStr } } = res.locals.account;
+            const raw = await LinkedService.getBasicProfile(csrfToken, cookiesStr);
+            const data = LinkedService.formatRawBasicProfile(raw);
+            res.status(httpStatus.OK).send(data);
+        }
+    );
+
+    /**
+     * Get invitation summary
+     */
+    static getInvitationSummary = catchAsync(
+        async(req, res) => {
+            const { linkedAccess: { csrfToken }, linkedAccess: { cookiesStr } } = res.locals.account;
+            const raw = await LinkedService.getInvitationSummary(csrfToken, cookiesStr);
+            const data = LinkedService.formatRawInvitationSummary(raw);
+            res.status(httpStatus.OK).send(data);
+        }
+    );
+
+    /**
+     * Get connection summary
+     */
+    static getConnectionSummary = catchAsync(
+        async(req, res) => {
+            const { linkedAccess: { csrfToken }, linkedAccess: { cookiesStr } } = res.locals.account;
+            const response = await LinkedService.getConnectionSummary(csrfToken, cookiesStr);
+            const { numConnections } = response.data;
+            res.status(httpStatus.OK).send({ numConnections });
+        }
+    );
+
+    /**
+     * Get connection summary
+     */
+    static getConnections = catchAsync(
+        async(req, res) => {
+            const { linkedAccess: { csrfToken }, linkedAccess: { cookiesStr } } = res.locals.account;
+            const { page = 1, sortType = "RECENTLY_ADDED" } = req.query;
+            const { data: { numConnections } } = await LinkedService.getConnectionSummary(csrfToken, cookiesStr);
+            let perPage = 40;
+            let totalCount = numConnections;
+            let start = 0;
+            let items = [];
+            let pages = Math.ceil(totalCount / perPage);
+            start = (start + perPage) * (page - 1);
+            if (page <= pages) {
+                var raw = await LinkedService.getConnections(csrfToken, cookiesStr, start, perPage, sortType);
+                items = LinkedService.formatRawGetConnections(raw);
+            } else {
+                throw new ApiError(httpStatus.BAD_REQUEST, LinkedinMessages.INVALID_PAGE);
+            }
+            res.status(httpStatus.OK).send({ items, perPage, totalCount });
+        }
+    );
 };
 
 

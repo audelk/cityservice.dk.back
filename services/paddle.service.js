@@ -27,7 +27,7 @@ export default class PaddleService {
             passthrough,
 
         } = body;
-        await AccountService.update(passthrough, {
+        await AccountService.updateById(passthrough, {
             status: "active",
             subscription: {
                 user_id,
@@ -65,7 +65,7 @@ export default class PaddleService {
 
         } = body;
 
-        let account = await AccountService.get(passthrough);
+        let account = await AccountService.getById(passthrough);
         account.invoices.addToSet({
             checkout_id,
             email,
