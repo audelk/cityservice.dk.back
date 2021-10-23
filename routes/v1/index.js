@@ -6,7 +6,7 @@ import accountRoute from "./account.route.js";
 import config from "../../config/config.js";
 import paddleRoute from "./paddle.route.js";
 import userService from "../../services/user.service.js";
-import memberRoute from "./member.route.js";
+import auth from "../../middlewares/auth.js";
 const router = express.Router();
 
 
@@ -38,24 +38,8 @@ if (config.env === 'development') {
         router.use(route.path, route.route);
     });
 }
-router.use('/accounts', checkApiKey, accountRoute);
+router.use('/accounts', auth('manageAccounts'), accountRoute);
 router.use('/paddle', paddleRoute);
-router.use('/members', checkApiKey, memberRoute);
 
 
 export default router;
-
-
-/**
- * Api key validator middleware
- */
-async function checkApiKey(req, res, next) {
-    try {
-        let user = await userService.checkApiKey(req.query.apiKey);
-        delete req.query.apiKey;
-        res.locals.user = user;
-        next();
-    } catch (err) {
-        next(err);
-    }
-}

@@ -42,11 +42,11 @@ const config = {
     port: envVars.PORT,
     mongoose: {
         url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
-        options: {
-            useCreateIndex: true,
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        },
+        //   options: {
+        //    useCreateIndex: true,
+        //    useNewUrlParser: true,
+        //    useUnifiedTopology: true,
+        //  },
     },
     jwt: {
         secret: envVars.JWT_SECRET,
@@ -75,6 +75,11 @@ const config = {
     linkedAppUrl: envVars.LINKED_APP_URL,
     paddleVendorId: envVars.PADDLE_VENDOR_ID,
     paddleAuthCode: envVars.PADDLE_AUTH_CODE,
-    paddleAPIUrl: envVars.PADDLE_API_URL
+    paddleAPIUrl: envVars.PADDLE_API_URL,
+    paddlePlanBasic: envVars.PADDLE_PLAN_BASIC,
+    paddlePlanAdvance: envVars.PADDLE_PLAN_ADVANCE,
+    paddlePlanUnlock: envVars.PADDLE_PLAN_UNLOCK,
+    linkedinAPIUrl: envVars.LINKED_API_URL,
+    linkedinAPIKey: envVars.LINKED_API_KEY
 }
 export default config;

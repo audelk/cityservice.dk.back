@@ -4,19 +4,15 @@ import { statuses } from "../models/account.model.js";
 import AccountService from "../services/account.service.js";
 import ApiError from "../utils/ApiError.js";
 import httpStatus from "http-status";
-import { Proxy } from "../models/proxy.model.js";
-import LinkedService from "../services/linkedin.service.js";
-import { LinkedinMessages } from "../utils/linkedHelper.js";
+
+
 const createAccount = {
     body: Joi.object().keys({
-            email: Joi.string().required().email(),
-            password: Joi.string().required().min(5).max(200),
-            fullName: Joi.string().required().min(5).max(200),
-            remarks: Joi.string().max(200),
-            // timeZone: Joi.string().required().min(2).max(200),
-        }
-
-    )
+        email: Joi.string().required().email(),
+        password: Joi.string().required().min(5).max(200),
+        timeZone: Joi.string().required().min(5).max(20),
+        remarks: Joi.string().max(200).allow('').optional()
+    })
 
 }
 const linkedToken = {
@@ -61,21 +57,6 @@ const searchAccount = {
         })
     }),
 };
-async function verifyLinkedToken(req, res, next) {
-
-    try {
-        const user = res.locals.user;
-        let account = await AccountService.find({ owners: user.id, "linkedAccess.linkedToken": req.query.linkedToken });
-        res.locals.account = account;
-        next();
-    } catch (err) {
-        if (err.statusCode == 404) {
-            next(new ApiError(httpStatus.BAD_REQUEST, "INVALID_TOKEN"));
-        } else
-            next(err);
-
-    }
-}
 
 async function checkAccount(req, res, next) {
     try {
@@ -88,19 +69,7 @@ async function checkAccount(req, res, next) {
     }
 }
 
-async function checkCookies(req, res, next) {
-    try {
-        const { linkedAccess } = res.locals.account;
-        if (linkedAccess) {
-            await LinkedService.getBasicProfile(linkedAccess.csrfToken, linkedAccess.cookiesStr);
-            next();
-        } else {
-            next(new ApiError(httpStatus.UNAUTHORIZED, LinkedinMessages.LINKEDIN_ACCESS_NOT_SET));
-        }
-    } catch (err) {
-        next(err);
-    }
-}
+
 
 const getContract = {
     params: Joi.object().keys({
@@ -149,9 +118,7 @@ const accountValidation = {
     getContract,
     loginContract,
     verification,
-    verifyLinkedToken,
     checkAccount,
-    checkCookies,
     getConnections
 
 }

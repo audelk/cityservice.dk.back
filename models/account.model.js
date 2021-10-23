@@ -15,8 +15,8 @@ export const statuses = [{
     },
     {
         id: '02f42092-bb23-4552-9ddb-cfdcc235d48f',
-        title: 'Deactivated',
-        slug: 'deactivated'
+        title: 'Deleted',
+        slug: 'deleted'
     },
     {
         id: '5648a630-979f-4403-8c41-fc9790dea8cd',
@@ -95,40 +95,6 @@ export const accountSchema = mongoose.Schema({
         loginStatus: {
             type: String
         },
-        proxy: {
-            type: Schema.Types.ObjectId,
-            ref: "Proxy"
-        },
-        linkedAccess: {
-            csrfToken: {
-                type: String
-            },
-            cookiesStr: {
-                type: String
-            },
-            loginStatus: {
-                type: String
-            },
-
-            linkedToken: {
-                type: String
-            },
-            browserId: {
-                type: Number
-            },
-            verificationUrl: {
-                type: String
-            },
-            verificationDate: {
-                type: Date
-            },
-            cookies: {
-                type: Schema.Types.Mixed
-            }
-        },
-        contracts: {
-            type: [contractSchema]
-        },
         subscription: {
             type: Schema.Types.Mixed
         },
@@ -143,8 +109,8 @@ export const accountSchema = mongoose.Schema({
             type: [Schema.Types.ObjectId],
             ref: 'User'
         },
-        profile: {
-            type: Schema.Types.Mixed
+        timeZone: {
+            type: String
         }
 
     }, { timestamps: true })
