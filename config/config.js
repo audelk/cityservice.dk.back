@@ -72,14 +72,5 @@ const config = {
     appUrl: envVars.APP_URL,
     appName: envVars.APP_NAME,
     appFrontUrl: envVars.FRONT_APP_URL,
-    linkedAppUrl: envVars.LINKED_APP_URL,
-    paddleVendorId: envVars.PADDLE_VENDOR_ID,
-    paddleAuthCode: envVars.PADDLE_AUTH_CODE,
-    paddleAPIUrl: envVars.PADDLE_API_URL,
-    paddlePlanBasic: envVars.PADDLE_PLAN_BASIC,
-    paddlePlanAdvance: envVars.PADDLE_PLAN_ADVANCE,
-    paddlePlanUnlock: envVars.PADDLE_PLAN_UNLOCK,
-    linkedinAPIUrl: envVars.LINKED_API_URL,
-    linkedinAPIKey: envVars.LINKED_API_KEY
 }
 export default config;

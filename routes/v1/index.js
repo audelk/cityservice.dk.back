@@ -2,22 +2,20 @@ import express from "express";
 import authRoute from "./auth.route.js";
 import userRoute from "./user.route.js";
 import docsRoute from "./docs.route.js";
-import accountRoute from "./account.route.js";
 import config from "../../config/config.js";
-import paddleRoute from "./paddle.route.js";
 import userService from "../../services/user.service.js";
 import auth from "../../middlewares/auth.js";
 const router = express.Router();
 
 
 const defaultRoutes = [{
-        path: '/auth',
-        route: authRoute,
-    },
-    {
-        path: '/users',
-        route: userRoute,
-    },
+    path: '/auth',
+    route: authRoute,
+},
+{
+    path: '/users',
+    route: userRoute,
+},
 ];
 
 const devRoutes = [
@@ -38,8 +36,7 @@ if (config.env === 'development') {
         router.use(route.path, route.route);
     });
 }
-router.use('/accounts', auth('manageAccounts'), accountRoute);
-router.use('/paddle', paddleRoute);
+
 
 
 export default router;

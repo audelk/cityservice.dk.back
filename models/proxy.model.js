@@ -29,7 +29,7 @@ const proxySchema = mongoose.Schema({
 
 proxySchema.plugin(toJSON);
 proxySchema.plugin(paginate);
-proxySchema.statics.findAvailable = async function() {
+proxySchema.statics.findAvailable = async function () {
     const proxy = this.findOne();
     return proxy;
 }

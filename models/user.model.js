@@ -13,13 +13,6 @@ const userSchema = mongoose.Schema({
         maxlength: 200,
         minlength: 5
     },
-
-    avatar: {
-        type: String,
-        required: false,
-        trim: true,
-        maxlength: 500,
-    },
     status: {
         type: String,
         required: false,
@@ -53,19 +46,20 @@ const userSchema = mongoose.Schema({
     role: {
         type: String,
         enum: roles,
-        default: 'manager',
+        default: 'client',
     },
     isEmailVerified: {
         type: Boolean,
         default: false,
     },
-    accounts: {
+    bookings: {
         type: [Schema.Types.ObjectId],
-        ref: 'LIAccount'
+        ref: 'Booking'
     },
-    apiKeys: {
+    bookingProfiles: {
         type: [Schema.Types.Mixed]
     }
+
 }, {
     timestamps: true,
 });
@@ -80,7 +74,7 @@ userSchema.plugin(paginate);
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-userSchema.statics.isEmailTaken = async function(email, excludeUserId) {
+userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
     const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
     return !!user;
 };
@@ -90,12 +84,12 @@ userSchema.statics.isEmailTaken = async function(email, excludeUserId) {
  * @param {string} password
  * @returns {Promise<boolean>}
  */
-userSchema.methods.isPasswordMatch = async function(password) {
+userSchema.methods.isPasswordMatch = async function (password) {
     const user = this;
     return bcrypt.compare(password, user.password);
 };
 
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
     const user = this;
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8);
@@ -103,7 +97,7 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
-userSchema.statics.getUserByApiKey = async function(apiKey) {
+userSchema.statics.getUserByApiKey = async function (apiKey) {
     const user = await this.findOne({ "apiKeys.apiKey": apiKey });
     return user;
 };
