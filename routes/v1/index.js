@@ -5,6 +5,7 @@ import docsRoute from "./docs.route.js";
 import config from "../../config/config.js";
 import userService from "../../services/user.service.js";
 import auth from "../../middlewares/auth.js";
+import dbaRoute from "./dba.route.js";
 const router = express.Router();
 
 
@@ -16,6 +17,10 @@ const defaultRoutes = [{
     path: '/users',
     route: userRoute,
 },
+{
+    path: "/dba",
+    route: dbaRoute
+}
 ];
 
 const devRoutes = [

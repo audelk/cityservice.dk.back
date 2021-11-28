@@ -12,6 +12,7 @@ authRoute.post('/logout', validate(authValidation.logout), authController.logout
 authRoute.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 authRoute.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
 authRoute.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
+authRoute.get('/reset-password', validate(authValidation.verifyEmail), authController.verifyRPToken);
 authRoute.post('/send-verification-email', auth(), authController.sendVerificationEmail);
 authRoute.get('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
 

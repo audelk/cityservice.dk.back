@@ -52,7 +52,10 @@ const verifyEmail = catchAsync(async (req, res) => {
     await authService.verifyEmail(req.query.token);
     res.status(httpStatus.OK).send({ message: "Email verified. You can now login." });
 });
-
+const verifyRPToken = catchAsync(async (req, res) => {
+    await authService.verifyRPToken(req.query.token);
+    res.status(httpStatus.OK).send({ message: "Token valid" });
+});
 
 const authController = {
     register,
@@ -62,7 +65,7 @@ const authController = {
     forgotPassword,
     resetPassword,
     sendVerificationEmail,
-    verifyEmail,
+    verifyEmail, verifyRPToken
 };
 
 export default authController;

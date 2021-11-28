@@ -4,15 +4,15 @@ import { password } from "./custom.validation.js";
 const register = {
     body: Joi.object().keys({
         email: Joi.string().required().email(),
-        password: Joi.string().required(),
-        name: Joi.string().required(),
+        password: Joi.string().required().min(5).max(20),
+        name: Joi.string().required().min(5).max(100),
     }),
 };
 
 const login = {
     body: Joi.object().keys({
         email: Joi.string().required(),
-        password: Joi.string().required(),
+        password: Joi.string().required().min(5).max(20),
     }),
 };
 
@@ -37,7 +37,7 @@ const forgotPassword = {
 const resetPassword = {
 
     body: Joi.object().keys({
-        password: Joi.string().required(),
+        password: Joi.string().required().min(5).max(20),
         token: Joi.string().required(),
     }),
 };
