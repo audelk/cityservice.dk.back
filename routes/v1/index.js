@@ -6,6 +6,7 @@ import config from "../../config/config.js";
 import userService from "../../services/user.service.js";
 import auth from "../../middlewares/auth.js";
 import dbaRoute from "./dba.route.js";
+import bookingRoute from "./booking.route.js";
 const router = express.Router();
 
 
@@ -20,6 +21,10 @@ const defaultRoutes = [{
 {
     path: "/dba",
     route: dbaRoute
+},
+{
+    path: "/booking",
+    route: bookingRoute
 }
 ];
 
@@ -42,6 +47,15 @@ if (config.env === 'development') {
     });
 }
 
-
+async function checkUser(req, res, next) {
+    try {
+        let user = await userService.checkApiKey(req.query.apiKey);
+        delete req.query.apiKey;
+        res.locals.user = user;
+        next();
+    } catch (err) {
+        next(err);
+    }
+}
 
 export default router;

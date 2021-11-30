@@ -1,16 +1,27 @@
 import mongoose from "mongoose";
 
 import { toJSON, paginate } from "./plugins/index.js";
+const { Schema } = mongoose;
 
 const bookingSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true,
-        maxlength: 200,
-        minlength: 5
+    pickup: {
+        type: Schema.Types.Mixed,
+        required: true
     },
-
+    shipping: {
+        type: Schema.Types.Mixed,
+        required: true
+    },
+    url: {
+        type: String,
+        required: true
+    },
+    images: {
+        type: [String]
+    },
+    userId: {
+        type: Schema.Types.ObjectId
+    }
 });
 
 bookingSchema.plugin(toJSON);
