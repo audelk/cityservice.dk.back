@@ -17,9 +17,19 @@ const createBooking = catchAsync(
     }
 );
 
+const getBookings = catchAsync(
+    async (req, res) => {
+        const { user } = res.locals;
+        const { filter, sortBy, populate, limit, page } = req.query;
+        const results = await bookingService.list(filter, {
+            sortBy, page, populate, limit
+        });
+        res.status(httpStatus.CREATED).send(results);
 
+    }
+)
 const bookingController = {
-    createBooking
+    createBooking, getBookings
 }
 
 export default bookingController;

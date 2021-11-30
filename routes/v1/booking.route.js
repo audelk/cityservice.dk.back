@@ -9,7 +9,8 @@ const bookingRoute = express.Router();
 
 bookingRoute
     .route("/")
-    .post(auth("createBooking"), bookingController.createBooking);
+    .post(auth("createBooking"), bookingController.createBooking)
+    .get(auth("createBooking"), bookingController.getBookings);
 
 
 export default bookingRoute;

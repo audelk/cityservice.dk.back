@@ -8,8 +8,15 @@ const create = async (body) => {
     return Booking.create(body)
 }
 
+const list = async (filter, options) => {
+    const bookings = await Booking.paginate(filter, options);
+    return bookings;
+}
+const getById = async (id) => {
+    return Booking.findById(id);
+}
 const bookingService = {
-    create
+    create, list
 }
 
 export default bookingService;
