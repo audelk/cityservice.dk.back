@@ -7,7 +7,7 @@ import calendarService from "../services/calendar.service.js";
 const createDate = catchAsync(
     async (req, res) => {
         const user = res.locals.user;
-        req.body.userId = user.id;
+        req.body.ownerId = user.id;
         const booking = await calendarService.createDate(req.body);
         user.bookings.addToSet(booking.id);
         user.markModified("bookings");

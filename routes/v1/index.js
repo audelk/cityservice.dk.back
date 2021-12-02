@@ -7,6 +7,7 @@ import userService from "../../services/user.service.js";
 import auth from "../../middlewares/auth.js";
 import dbaRoute from "./dba.route.js";
 import bookingRoute from "./booking.route.js";
+import calendarRoute from "./calendar.route.js";
 const router = express.Router();
 
 
@@ -25,6 +26,10 @@ const defaultRoutes = [{
 {
     path: "/booking",
     route: bookingRoute
+},
+{
+    path: "/calendar",
+    route: calendarRoute
 }
 ];
 

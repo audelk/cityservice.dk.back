@@ -16,12 +16,12 @@ const calendarDateSchema = mongoose.Schema({
         type: [Schema.Types.ObjectId],
         ref: 'Booking'
     },
-    owner: {
+    ownerId: {
         type: Schema.Types.ObjectId
     }
 
 });
 
-calendarSchema.plugin(toJSON);
+calendarDateSchema.plugin(toJSON);
 
 export const CalendarDate = mongoose.model('calendarDate', calendarDateSchema);
