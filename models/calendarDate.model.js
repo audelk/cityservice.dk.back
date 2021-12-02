@@ -4,12 +4,12 @@ const { Schema } = mongoose;
 
 const calendarDateSchema = mongoose.Schema({
     available: {
-        type: String,
+        type: Boolean,
         required: true,
 
     },
-    timeStamp: {
-        type: Number,
+    date: {
+        type: String,
         required: true,
     },
     bookings: {
