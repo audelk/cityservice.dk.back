@@ -4,7 +4,11 @@ import { User } from "../models/index.js";
 import ApiError from "../utils/ApiError.js";
 import { CalendarDate } from "../models/calendarDate.model.js";
 const createDate = async (body) => {
-    return CalendarDate.create(body)
+    const date = await CalendarDate.findOneAndUpdate({ date: body.date }, body, { new: true });
+    if (date)
+        return date;
+    else
+        return CalendarDate.create(body)
 }
 
 const listDate = async (userId) => {
