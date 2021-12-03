@@ -58,7 +58,11 @@ const userSchema = mongoose.Schema({
     },
     bookingProfiles: {
         type: [Schema.Types.Mixed]
-    }
+    },
+    calendarDates: {
+        type: [Schema.Types.ObjectId],
+        ref: 'calendarDate'
+    },
 
 }, {
     timestamps: true,

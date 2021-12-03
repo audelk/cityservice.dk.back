@@ -20,7 +20,7 @@ const calendarDateSchema = mongoose.Schema({
         type: Schema.Types.ObjectId
     },
     hours: {
-        type: [Schema.Types.Mixed]
+        type: [new Schema({ hour: Number, available: Boolean })]
     }
 
 });

@@ -8,12 +8,19 @@ const createDate = catchAsync(
     async (req, res) => {
         const user = res.locals.user;
         req.body.ownerId = user.id;
-        const booking = await calendarService.createDate(req.body);
-        user.bookings.addToSet(booking.id);
-        user.markModified("bookings");
+        const date = await calendarService.createDate(req.body);
+        user.calendarDates.addToSet(date.id);
+        user.markModified("calendarDates");
         await user.save();
 
-        res.status(httpStatus.CREATED).send(booking);
+        res.status(httpStatus.CREATED).send(date);
+    }
+);
+const createHour = catchAsync(
+    async (req, res) => {
+        const user = res.locals.user;
+        const hour = await calendarService.createHour(req.body);
+        res.status(httpStatus.CREATED).send(hour);
     }
 );
 const getDates = catchAsync(
@@ -29,7 +36,7 @@ const getDates = catchAsync(
 )
 
 const calendarController = {
-    createDate, getDates
+    createDate, getDates, createHour
 }
 
 export default calendarController;

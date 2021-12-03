@@ -7,24 +7,37 @@ const createDate = async (body) => {
     const date = await CalendarDate.findOneAndUpdate({ date: body.date }, body, { new: true });
     if (date)
         return date;
-    else
+    else {
+        body.hours = [
+            { hour: 1, available: false }
+        ]
         return CalendarDate.create(body)
+    }
+
 }
 const createHour = async (body) => {
-    const { id, available, hour } = body;
-    const date = await CalendarDate.findOne(id);
+    const { dateId, available, hour } = body;
+    const date = await CalendarDate.findById(dateId);
     if (date) {
-        date.hours.addToSet({
-            available, hour
+        let found = false;
+        date.hours = date.hours.map(item => {
+            if (item && item.hour == hour) {
+                found = item;
+                item.available = available;
+
+            }
+            return item ? item : undefined;
         });
-
+        if (found === false)
+            var [r] = date.hours.addToSet({
+                available, hour
+            });
+        else
+            var r = found;
         await date.save();
-        return { available, hour }
+        return r;
     }
-    else {
-        throw new Error('Invalid token type');
-    }
-
+    throw new ApiError(httpStatus.NOT_FOUND, 'INVALID_DATE');
 }
 const listDate = async (userId) => {
     const bookings = await CalendarDate.find({ ownderId: userId });
@@ -34,7 +47,7 @@ const getDate = async (id) => {
     return CalendarDate.findById(id);
 }
 const calendarService = {
-    createDate, getDate, listDate
+    createDate, getDate, listDate, createHour
 }
 
 export default calendarService;

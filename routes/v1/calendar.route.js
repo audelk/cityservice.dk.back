@@ -11,6 +11,8 @@ calendarRoute
     .route("/")
     .post(auth("createCalendar"), calendarController.createDate)
     .get(auth("createCalendar"), calendarController.getDates);
-
+calendarRoute
+    .route("/hour")
+    .post(auth("createCalendar"), calendarController.createHour)
 
 export default calendarRoute;
