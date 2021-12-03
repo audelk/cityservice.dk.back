@@ -18,6 +18,9 @@ const calendarDateSchema = mongoose.Schema({
     },
     ownerId: {
         type: Schema.Types.ObjectId
+    },
+    hours: {
+        type: [Schema.Types.Mixed]
     }
 
 });

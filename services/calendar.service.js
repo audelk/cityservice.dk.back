@@ -10,7 +10,22 @@ const createDate = async (body) => {
     else
         return CalendarDate.create(body)
 }
+const createHour = async (body) => {
+    const { id, available, hour } = body;
+    const date = await CalendarDate.findOne(id);
+    if (date) {
+        date.hours.addToSet({
+            available, hour
+        });
 
+        await date.save();
+        return { available, hour }
+    }
+    else {
+        throw new Error('Invalid token type');
+    }
+
+}
 const listDate = async (userId) => {
     const bookings = await CalendarDate.find({ ownderId: userId });
     return bookings;
