@@ -15,7 +15,7 @@ const createDate = async (body) => {
     }
 
 }
-const createHour = async (body) => {
+const createHourV1 = async (body) => {
     const { dateId, available, hour } = body;
     const date = await CalendarDate.findById(dateId);
     if (date) {
@@ -34,6 +34,19 @@ const createHour = async (body) => {
             });
         else
             var r = found;
+        await date.save();
+        return r;
+    }
+    throw new ApiError(httpStatus.NOT_FOUND, 'INVALID_DATE');
+}
+
+const createHour = async (body) => {
+    const { dateId, available, from, to } = body;
+    const date = await CalendarDate.findById(dateId);
+    if (date) {
+        var [r] = date.hours.addToSet({
+            available, from, to
+        });
         await date.save();
         return r;
     }
