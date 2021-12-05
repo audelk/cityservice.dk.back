@@ -14,5 +14,7 @@ calendarRoute
 calendarRoute
     .route("/hour")
     .post(auth("createCalendar"), calendarController.createHour)
-
+calendarRoute
+    .route("/hour/:id")
+    .delete(auth("createCalendar"), calendarController.deleteHour)
 export default calendarRoute;

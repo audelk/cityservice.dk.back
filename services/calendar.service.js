@@ -8,9 +8,7 @@ const createDate = async (body) => {
     if (date)
         return date;
     else {
-        body.hours = [
-            { hour: 1, available: false }
-        ]
+        body.hours = []
         return CalendarDate.create(body)
     }
 
