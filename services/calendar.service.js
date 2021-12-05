@@ -50,6 +50,17 @@ const createHour = async (body) => {
     }
     throw new ApiError(httpStatus.NOT_FOUND, 'INVALID_DATE');
 }
+const deleteHour = async (body) => {
+    const { dateId, id } = body;
+    const hour = await CalendarDate.findByIdAndUpdate(dateId, {
+        '$pull': {
+            'hours': { '_id': id }
+        }
+    });
+    if (hour)
+        return { dateId, id };
+    throw new ApiError(httpStatus.NOT_FOUND, 'INVALID_DATE');
+}
 const listDate = async (userId) => {
     const bookings = await CalendarDate.find({ ownderId: userId });
     return bookings;
@@ -58,7 +69,7 @@ const getDate = async (id) => {
     return CalendarDate.findById(id);
 }
 const calendarService = {
-    createDate, getDate, listDate, createHour
+    createDate, getDate, listDate, createHour, deleteHour
 }
 
 export default calendarService;

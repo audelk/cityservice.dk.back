@@ -23,6 +23,13 @@ const createHour = catchAsync(
         res.status(httpStatus.CREATED).send(hour);
     }
 );
+const deleteHour = catchAsync(
+    async (req, res) => {
+        const user = res.locals.user;
+        const hour = await calendarService.deleteHour({ id: req.params.id, dateId: req.body.dateId });
+        res.status(httpStatus.CREATED).send(hour);
+    }
+);
 const getDates = catchAsync(
     async (req, res) => {
         const { user } = res.locals;
@@ -36,7 +43,7 @@ const getDates = catchAsync(
 )
 
 const calendarController = {
-    createDate, getDates, createHour
+    createDate, getDates, createHour, deleteHour
 }
 
 export default calendarController;
