@@ -12,5 +12,8 @@ bookingRoute
     .post(auth("createBooking"), bookingController.createBooking)
     .get(auth("createBooking"), bookingController.getBookings);
 
+bookingRoute
+    .route("/geoCodeAddress")
+    .post(auth("createBooking"), bookingController.geoCodeAddress)
 
 export default bookingRoute;

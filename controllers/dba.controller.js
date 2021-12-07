@@ -2,6 +2,8 @@ import httpStatus from "http-status";
 import ApiError from "../utils/ApiError.js";
 import catchAsync from "../utils/catchAsync.js";
 import { DBAService } from "../services/index.js";
+import bookingService from "../services/booking.service.js";
+
 const getMainDetails = catchAsync(
     async (req, res) => {
         const { url } = req.query;
@@ -26,6 +28,14 @@ const getMainDetails = catchAsync(
         const htmlRaw = await DBAService.getHTMLCode(url + "/billeder/1/");
         const images = DBAService.getGalleryFromHTML(htmlRaw);
         details.url = url;
+
+        //geocode address
+        const results = await bookingService.geoCodeAddress(details.location);
+        if (results.length > 0) {
+            details.geoLocation = results[0];
+            details.longitude = results[0].longitude;
+            details.latitude = results[0].latitude;
+        }
         res.status(httpStatus.OK).send({ details, images });
     }
 
