@@ -32,7 +32,7 @@ const getMainDetails = catchAsync(
         //geocode address
         const results = await bookingService.geoCodeAddress(details.location);
         if (results.length > 0) {
-            details.geoLocation = results[0];
+            // details.geoLocation = results[0];
             details.longitude = results[0].longitude;
             details.latitude = results[0].latitude;
         }
