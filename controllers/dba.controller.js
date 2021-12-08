@@ -31,7 +31,8 @@ const getMainDetails = catchAsync(
 
         //geocode address
         const results = await bookingService.geoCodeAddress(details.location);
-        details.zip = parseInt(details.location.match(/\d+/)[0]);
+        // details.zip = parseInt(details.location.match(/\d+/)[0]);
+        details.zip = details.location.match(/\d+/)[0];
         if (results.length > 0) {
             // details.geoLocation = results[0];
             details.longitude = results[0].longitude;
