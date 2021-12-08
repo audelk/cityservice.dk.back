@@ -21,6 +21,12 @@ const bookingSchema = mongoose.Schema({
     },
     userId: {
         type: Schema.Types.ObjectId
+    },
+    status: {
+        type: String,
+        required: false,
+        enum: ['Booked', 'PickedUp', 'Cancelled', "Paused", 'Delivered', 'Rejected'],
+        default: "Booked"
     }
 });
 
