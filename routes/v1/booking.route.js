@@ -10,8 +10,8 @@ const bookingRoute = express.Router();
 bookingRoute
     .route("/")
     .post(auth("createBooking"), bookingController.createBooking)
-    .get(auth("createBooking"), bookingController.getBookings);
-
+    .get(auth("createBooking"), bookingController.getBookings)
+    .put(auth("updateBooking"), bookingController.updateBooking);
 bookingRoute
     .route("/geoCodeAddress")
     .post(auth("createBooking"), bookingController.geoCodeAddress)

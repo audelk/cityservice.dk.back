@@ -28,6 +28,15 @@ const getBookings = catchAsync(
 
     }
 )
+
+const updateBooking = catchAsync(
+    async (req, res) => {
+        const { user } = res.locals;
+        const result = await bookingService.updateById(req.body);
+        res.status(httpStatus.CREATED).send(result);
+
+    }
+)
 const geoCodeAddress = catchAsync(
     async (req, res) => {
         const { address } = req.body;
@@ -37,7 +46,7 @@ const geoCodeAddress = catchAsync(
     }
 )
 const bookingController = {
-    createBooking, getBookings, geoCodeAddress
+    createBooking, getBookings, geoCodeAddress, updateBooking
 }
 
 export default bookingController;

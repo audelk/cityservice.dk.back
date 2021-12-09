@@ -23,7 +23,18 @@ const getById = async (id) => {
     return Booking.findById(id);
 }
 
-
+const updateById = async (body) => {
+    const { id, type, data } = body;
+    const record = await Booking.findById(id);
+    if (!record) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'RECORD_NOT_FOUND');
+    }
+    if (type == "booking") {
+        Object.assign(record, data);
+        await record.save()
+    }
+    return record;
+}
 const geoCodeAddress = async (address) => {
     const geocoder = node_geocoder(geoCoderOptions);
     const res = await geocoder.geocode(address);
@@ -31,7 +42,7 @@ const geoCodeAddress = async (address) => {
 }
 
 const bookingService = {
-    create, list, geoCodeAddress
+    create, list, geoCodeAddress, updateById
 }
 
 
