@@ -28,7 +28,10 @@ const bookingSchema = mongoose.Schema({
         enum: ['Booked', 'PickedUp', 'Cancelled', "Paused", 'Delivered', 'Rejected'],
         default: "Booked"
     }
-});
+},
+    {
+        timestamps: true,
+    });
 
 bookingSchema.plugin(toJSON);
 bookingSchema.plugin(paginate);

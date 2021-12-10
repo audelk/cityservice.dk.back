@@ -5,66 +5,67 @@ import { toJSON, paginate } from "./plugins/index.js";
 import { roles } from "../config/roles.js";
 const { Schema } = mongoose;
 
-const userSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true,
-        maxlength: 200,
-        minlength: 5
-    },
-    status: {
-        type: String,
-        required: false,
-        enum: ['online', 'offline'],
-        default: 'offline'
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        lowercase: true,
-        validate(value) {
-            if (!validator.isEmail(value)) {
-                throw new Error('Invalid email');
-            }
+const userSchema = mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+            trim: true,
+            maxlength: 200,
+            minlength: 5
         },
-    },
-    password: {
-        type: String,
-        required: true,
-        trim: true,
-        minlength: 5,
-        /*validate(value) {
-            if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-                throw new Error('Password must contain at least one letter and one number');
-            }
-        },*/
-        private: true, // used by the toJSON plugin
-    },
-    role: {
-        type: String,
-        enum: roles,
-        default: 'client',
-    },
-    isEmailVerified: {
-        type: Boolean,
-        default: false,
-    },
-    bookings: {
-        type: [Schema.Types.ObjectId],
-        ref: 'Booking'
-    },
-    bookingProfiles: {
-        type: [Schema.Types.Mixed]
-    },
-    calendarDates: {
-        type: [Schema.Types.ObjectId],
-        ref: 'calendarDate'
-    },
+        status: {
+            type: String,
+            required: false,
+            enum: ['online', 'offline'],
+            default: 'offline'
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
+            lowercase: true,
+            validate(value) {
+                if (!validator.isEmail(value)) {
+                    throw new Error('Invalid email');
+                }
+            },
+        },
+        password: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 5,
+            /*validate(value) {
+                if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+                    throw new Error('Password must contain at least one letter and one number');
+                }
+            },*/
+            private: true, // used by the toJSON plugin
+        },
+        role: {
+            type: String,
+            enum: roles,
+            default: 'client',
+        },
+        isEmailVerified: {
+            type: Boolean,
+            default: false,
+        },
+        bookings: {
+            type: [Schema.Types.ObjectId],
+            ref: 'Booking'
+        },
+        bookingProfiles: {
+            type: [Schema.Types.Mixed]
+        },
+        calendarDates: {
+            type: [Schema.Types.ObjectId],
+            ref: 'calendarDate'
+        },
 
-}, {
+    }, {
     timestamps: true,
 });
 
