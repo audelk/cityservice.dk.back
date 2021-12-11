@@ -20,10 +20,31 @@ const createBooking = catchAsync(
 const getBookings = catchAsync(
     async (req, res) => {
         const { user } = res.locals;
-        const { filter, sortBy, populate, limit, page } = req.query;
-        const results = await bookingService.list(filter, {
-            sortBy, page, populate, limit
-        });
+        const { filterByStatus, sortBy = 'DateSubmitted', sortType = "asc", keyword, limit, page } = req.query;
+        let filter;
+        let mSortyBy = {};
+        if (filterByStatus) {
+            let filters = filterByStatus.split(',').map(item => { return { status: item } });
+            filter = { $or: filters };
+        }
+        if (sortBy == "PickupDate") {
+            mSortyBy = `pickup.pickupDate:${sortType}`;
+        }
+        else if (sortBy == "ZipCode") {
+            mSortyBy = `pickup.zip:${sortType}`;
+        }
+        else
+            mSortyBy = `createdAt:${sortType}`;
+
+        if (keyword) {
+            if (filter)
+                filter['$and'] = [{ "pickup.zip": keyword.trim() }];
+            else
+                filter = { "pickup.zip": keyword.trim() }
+        };
+
+
+        const results = await bookingService.list(filter, { sortBy: mSortyBy, limit, page });
         res.status(httpStatus.CREATED).send(results);
 
     }

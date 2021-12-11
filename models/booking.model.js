@@ -3,32 +3,33 @@ import mongoose from "mongoose";
 import { toJSON, paginate } from "./plugins/index.js";
 const { Schema } = mongoose;
 
-const bookingSchema = mongoose.Schema({
-    pickup: {
-        type: Schema.Types.Mixed,
-        required: true
+const bookingSchema = mongoose.Schema(
+    {
+        pickup: {
+            type: Schema.Types.Mixed,
+            required: true
+        },
+        shipping: {
+            type: Schema.Types.Mixed,
+            required: true
+        },
+        url: {
+            type: String,
+            required: true
+        },
+        images: {
+            type: [String]
+        },
+        userId: {
+            type: Schema.Types.ObjectId
+        },
+        status: {
+            type: String,
+            required: false,
+            enum: ['Booked', 'PickedUp', 'Cancelled', "Paused", 'Delivered', 'Rejected'],
+            default: "Booked"
+        }
     },
-    shipping: {
-        type: Schema.Types.Mixed,
-        required: true
-    },
-    url: {
-        type: String,
-        required: true
-    },
-    images: {
-        type: [String]
-    },
-    userId: {
-        type: Schema.Types.ObjectId
-    },
-    status: {
-        type: String,
-        required: false,
-        enum: ['Booked', 'PickedUp', 'Cancelled', "Paused", 'Delivered', 'Rejected'],
-        default: "Booked"
-    }
-},
     {
         timestamps: true,
     });
