@@ -26,8 +26,11 @@ const bookingSchema = mongoose.Schema(
         status: {
             type: String,
             required: false,
-            enum: ['Booked', 'PickedUp', 'Cancelled', "Paused", 'Delivered', 'Rejected'],
-            default: "Booked"
+            enum: ["Submitted", 'Booked', 'PickedUp', 'Cancelled', "Paused", 'Delivered', 'Rejected'],
+            default: "Submitted"
+        },
+        pickupTime: {
+            type: [new Schema({ from: Schema.Types.Mixed, to: Schema.Types.Mixed, available: Boolean })]
         }
     },
     {

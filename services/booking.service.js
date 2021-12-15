@@ -20,7 +20,11 @@ const list = async (filter, options) => {
     return bookings;
 }
 const getById = async (id) => {
-    return Booking.findById(id);
+    const record = Booking.findById(id);
+    if (!record) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'RECORD_NOT_FOUND');
+    }
+    return record;
 }
 
 const updateById = async (body) => {
@@ -42,7 +46,7 @@ const geoCodeAddress = async (address) => {
 }
 
 const bookingService = {
-    create, list, geoCodeAddress, updateById
+    create, list, geoCodeAddress, updateById, getById
 }
 
 

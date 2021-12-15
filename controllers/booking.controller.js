@@ -17,6 +17,7 @@ const createBooking = catchAsync(
     }
 );
 
+
 const getBookings = catchAsync(
     async (req, res) => {
         const { user } = res.locals;

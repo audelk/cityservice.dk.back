@@ -8,6 +8,7 @@ import auth from "../../middlewares/auth.js";
 import dbaRoute from "./dba.route.js";
 import bookingRoute from "./booking.route.js";
 import calendarRoute from "./calendar.route.js";
+import myCalendarRoute from "./myCalendar.route.js";
 const router = express.Router();
 
 
@@ -30,6 +31,10 @@ const defaultRoutes = [{
 {
     path: "/calendar",
     route: calendarRoute
+},
+{
+    path: "/myCalendar",
+    route: myCalendarRoute
 }
 ];
 
