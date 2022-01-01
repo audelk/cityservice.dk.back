@@ -13,9 +13,27 @@ const createUser = catchAsync(
 );
 
 const getUsers = catchAsync(async (req, res) => {
-    const filter = pick(req.query, ['name', 'role']);
-    const options = pick(req.query, ['sortBy', 'limit', 'page']);
-    const result = await userService.queryUsers(filter, options);
+    const { filterByStatus, sortBy = 'name', sortType = "asc", keyword, limit = 10, page } = req.query;
+    let filter;
+    let mSortyBy = {};
+    if (filterByStatus) {
+        let filters = filterByStatus.split(',').map(item => { return { status: item } });
+        filter = { $or: filters };
+    }
+
+    if (sortBy) {
+        mSortyBy = `${sortBy}:${sortType}`;
+    }
+    else
+        mSortyBy = `createdAt:${sortType}`;
+
+    if (keyword) {
+        if (filter)
+            filter['$and'] = [{ "name": { '$regex': '.*' + keyword.trim() + '.*' } }, { "email": { '$regex': '.*' + keyword.trim() + '.*' } }];
+        else
+            filter = { $or: [{ "name": { '$regex': '.*' + keyword.trim() + '.*' } }, { "email": { '$regex': '.*' + keyword.trim() + '.*' } }] };
+    };
+    const result = await userService.queryUsers(filter, { sortBy: mSortyBy, limit, page });
     res.send(result);
 });
 
@@ -39,8 +57,8 @@ const updateUser = catchAsync(async (req, res) => {
 });
 
 const deleteUser = catchAsync(async (req, res) => {
-    await userService.deleteUserById(req.params.userId);
-    res.status(httpStatus.NO_CONTENT).send();
+    const user = await userService.deleteUserById(req.params.userId);
+    res.status(httpStatus.OK).send({});
 });
 
 const getAccounts = catchAsync(async (req, res) => {

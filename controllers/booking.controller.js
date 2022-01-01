@@ -21,7 +21,7 @@ const createBooking = catchAsync(
 const getBookings = catchAsync(
     async (req, res) => {
         const { user } = res.locals;
-        const { filterByStatus, sortBy = 'DateSubmitted', sortType = "asc", keyword, limit, page } = req.query;
+        const { filterByStatus, sortBy = 'DateSubmitted', sortType = "asc", keyword, limit = 10, page } = req.query;
         let filter;
         let mSortyBy = {};
         if (filterByStatus) {

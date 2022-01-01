@@ -7,7 +7,7 @@ import mongoose from "mongoose";
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
-const createUser = async(userBody) => {
+const createUser = async (userBody) => {
     if (await User.isEmailTaken(userBody.email)) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
     }
@@ -23,7 +23,7 @@ const createUser = async(userBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryUsers = async(filter, options) => {
+const queryUsers = async (filter, options) => {
     const users = await User.paginate(filter, options);
     return users;
 };
@@ -33,7 +33,7 @@ const queryUsers = async(filter, options) => {
  * @param {ObjectId} id
  * @returns {Promise<User>}
  */
-const getUserById = async(id) => {
+const getUserById = async (id) => {
     return User.findById(id);
 };
 
@@ -42,7 +42,7 @@ const getUserById = async(id) => {
  * @param {string} email
  * @returns {Promise<User>}
  */
-const getUserByEmail = async(email) => {
+const getUserByEmail = async (email) => {
     return User.findOne({ email });
 };
 
@@ -52,7 +52,7 @@ const getUserByEmail = async(email) => {
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
-const updateUserById = async(userId, updateBody) => {
+const updateUserById = async (userId, updateBody) => {
     const user = await getUserById(userId);
     if (!user) {
         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -70,16 +70,18 @@ const updateUserById = async(userId, updateBody) => {
  * @param {ObjectId} userId
  * @returns {Promise<User>}
  */
-const deleteUserById = async(userId) => {
+const deleteUserById = async (userId) => {
     const user = await getUserById(userId);
     if (!user) {
         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
     }
+    if (user.role == "admin")
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized');
     await user.remove();
     return user;
 };
 
-const checkApiKey = async(apiKey) => {
+const checkApiKey = async (apiKey) => {
     const user = await User.getUserByApiKey(apiKey);
     if (!user) {
         throw new ApiError(httpStatus.NOT_FOUND, 'INVALID_API_KEY');

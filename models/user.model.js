@@ -17,8 +17,8 @@ const userSchema = mongoose.Schema(
         status: {
             type: String,
             required: false,
-            enum: ['online', 'offline'],
-            default: 'offline'
+            enum: ['Active', 'Blocked'],
+            default: 'Active'
         },
         email: {
             type: String,
@@ -64,6 +64,9 @@ const userSchema = mongoose.Schema(
             type: [Schema.Types.ObjectId],
             ref: 'calendarDate'
         },
+        lastLogin: {
+            type: Schema.Types.Date
+        }
 
     }, {
     timestamps: true,

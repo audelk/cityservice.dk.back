@@ -13,12 +13,15 @@ import tokenTypes from "../config/tokens.js";
  */
 const loginUserWithEmailAndPassword = async (email, password) => {
     const user = await userService.getUserByEmail(email);
+
     if (user && user.isEmailVerified == false) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'Your need to validate your account first. Please check your email for validation link.');
     }
     if (!user || !(await user.isPasswordMatch(password))) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
     }
+    user.lastLogin = Date.now();
+    await user.save();
     return user;
 };
 
