@@ -10,8 +10,20 @@ const bookingRoute = express.Router();
 bookingRoute
     .route("/")
     .post(auth("createBooking"), bookingController.createBooking)
-    .get(auth("createBooking"), bookingController.getBookings)
-    .put(auth("updateBooking"), bookingController.updateBooking);
+    .get(auth("getBookings"), bookingController.getBookings)
+    .put(auth("updateBooking"), bookingController.updateBooking)
+bookingRoute
+    .route("/:bookingId")
+    .get(auth("getBooking"), bookingController.getBooking)
+    .put(auth("updateBooking"), bookingController.updateBooking)
+    .delete(auth("deleteBooking"), bookingController.deleteBooking);
+
+bookingRoute
+    .route("/:bookingId/pickup")
+    .put(auth("updateBooking"), bookingController.updateBookingPickup);
+bookingRoute
+    .route("/:bookingId/shipping")
+    .put(auth("updateBooking"), bookingController.updateBookingShipping)
 bookingRoute
     .route("/geoCodeAddress")
     .post(auth("createBooking"), bookingController.geoCodeAddress)

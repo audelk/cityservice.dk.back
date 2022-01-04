@@ -39,6 +39,41 @@ const updateById = async (body) => {
     }
     return record;
 }
+const updatePickup = async (id, body) => {
+
+    const record = await Booking.findById(id);
+
+    if (!record) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'RECORD_NOT_FOUND');
+    }
+    Object.assign(record.pickup, body);
+    record.markModified("pickup");
+    await record.save();
+    return record;
+}
+const updateShipping = async (id, body) => {
+
+    const record = await Booking.findById(id);
+
+    if (!record) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'RECORD_NOT_FOUND');
+    }
+    Object.assign(record.shipping, body);
+    record.markModified("shipping");
+    await record.save();
+    return record;
+}
+const deleteBooking = async (id, role) => {
+
+    const record = await Booking.findById(id);
+    if (role == "client" && record.status != "submitted")
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized');
+    if (!record) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'RECORD_NOT_FOUND');
+    }
+    record.remove();
+    return record;
+}
 const geoCodeAddress = async (address) => {
     const geocoder = node_geocoder(geoCoderOptions);
     const res = await geocoder.geocode(address);
@@ -46,7 +81,7 @@ const geoCodeAddress = async (address) => {
 }
 
 const bookingService = {
-    create, list, geoCodeAddress, updateById, getById
+    create, list, geoCodeAddress, updateById, updatePickup, getById, deleteBooking, updateShipping
 }
 
 

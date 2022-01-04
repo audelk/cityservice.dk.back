@@ -14,7 +14,16 @@ const getMainDetails = catchAsync(
         else {
             var listingId = parseInt(temp);
         }
-
+        /*  const details1 = {
+              name: "dummy",
+              location: "new york",
+              zip: 23244,
+              phone: "asdf",
+              title: "dummy title",
+              price: "$1"
+          };
+         const images1 = [];
+         res.status(httpStatus.OK).send({ details: details1, images: images1 });*/
         const apiUrl = `https://www.dba.dk/api/dba-vip-site/${listingId}/conversation`;
         const detailsRaw = await DBAService.getJSON(apiUrl);
         const details = DBAService.formatRawDetails(detailsRaw);
