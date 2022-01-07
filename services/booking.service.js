@@ -66,7 +66,7 @@ const updateShipping = async (id, body) => {
 const deleteBooking = async (id, role) => {
 
     const record = await Booking.findById(id);
-    if (role == "client" && record.status != "submitted")
+    if (role == "client" && record.status != "Submitted")
         throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized');
     if (!record) {
         throw new ApiError(httpStatus.NOT_FOUND, 'RECORD_NOT_FOUND');
