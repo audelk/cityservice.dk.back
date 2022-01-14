@@ -9,6 +9,7 @@ import dbaRoute from "./dba.route.js";
 import bookingRoute from "./booking.route.js";
 import calendarRoute from "./calendar.route.js";
 import myCalendarRoute from "./myCalendar.route.js";
+import myRouteRoute from "./myRoute.route.js";
 const router = express.Router();
 
 
@@ -35,6 +36,10 @@ const defaultRoutes = [{
 {
     path: "/myCalendar",
     route: myCalendarRoute
+},
+{
+    path: "/myRoute",
+    route: myRouteRoute
 }
 ];
 

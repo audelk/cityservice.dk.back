@@ -1,0 +1,1 @@
+export const SearchStatuses = ['ready', 'processing', 'paused', 'cancelled', 'error', 'rejected', 'processed'];
