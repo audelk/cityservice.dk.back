@@ -31,6 +31,9 @@ const bookingSchema = mongoose.Schema(
         },
         pickupTime: {
             type: [new Schema({ from: Schema.Types.Mixed, to: Schema.Types.Mixed, available: Boolean })]
+        },
+        routes: {
+            type: [Schema.Types.ObjectId]
         }
     },
     {

@@ -79,9 +79,26 @@ const geoCodeAddress = async (address) => {
     const res = await geocoder.geocode(address);
     return res;
 }
-
+const addIdToChildren = async ({ id, childId, childName }) => {
+    const rec = await Booking.findById(id);
+    if (!rec)
+        throw new ApiError(httpStatus.NOT_FOUND, RECORD_NOT_FOUND);
+    rec[childName].addToSet(childId);
+    rec.markModified(childName);
+    await rec.save();
+    return rec;
+};
+const removeChildById = async ({ id, childId, childName }) => {
+    const rec = await Booking.findById(id);
+    if (!rec)
+        throw new ApiError(httpStatus.NOT_FOUND, RECORD_NOT_FOUND);
+    rec[childName].pull(childId);
+    rec.markModified(childName);
+    await rec.save();
+    return rec;
+};
 const bookingService = {
-    create, list, geoCodeAddress, updateById, updatePickup, getById, deleteBooking, updateShipping
+    create, list, geoCodeAddress, updateById, updatePickup, getById, deleteBooking, updateShipping, addIdToChildren, removeChildById
 }
 
 

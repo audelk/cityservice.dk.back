@@ -24,8 +24,13 @@ const myRouteSchema = mongoose.Schema(
             default: "Ready"
         },
         destination: {
-            type: [Schema.Types.ObjectId]
+            type: [Schema.Types.ObjectId],
+            ref: 'Booking'
+        },
+        myLocation: {
+            type: new Schema({ address: Schema.Types.String, latitude: Schema.Types.Number, longitude: Schema.Types.Number })
         }
+
     },
     {
         timestamps: true,

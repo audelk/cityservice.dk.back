@@ -7,18 +7,41 @@ import { RECORD_CANNOT_BE_MODIFIED, RECORD_NOT_FOUND } from "../constants/errorM
 const create = async (fields) => {
     return Model.create(fields);
 };
-
+const addIdToChildren = async ({ id, childId, childName }) => {
+    const rec = await Model.findById(id);
+    if (!rec)
+        throw new ApiError(httpStatus.NOT_FOUND, RECORD_NOT_FOUND);
+    rec[childName].addToSet(childId);
+    rec.markModified(childName);
+    await rec.save();
+    return rec;
+};
+const removeChildById = async ({ id, childId, childName }) => {
+    const rec = await Model.findById(id);
+    if (!rec)
+        throw new ApiError(httpStatus.NOT_FOUND, RECORD_NOT_FOUND);
+    rec[childName].pull(childId);
+    rec.markModified(childName);
+    await rec.save();
+    return rec;
+};
 const updateById = async (id, fields) => {
     const rec = await Model.findById(id);
     if (!rec)
         throw new ApiError(httpStatus.NOT_FOUND, RECORD_NOT_FOUND);
-    if (rec.status != 'ready')
-        throw new ApiError(httpStatus.BAD_REQUEST, RECORD_CANNOT_BE_MODIFIED);
+    // if (rec.status != 'ready')
+    //  throw new ApiError(httpStatus.BAD_REQUEST, RECORD_CANNOT_BE_MODIFIED);
     Object.assign(rec, fields);
     await rec.save();
     return rec;
 };
+const getDataById = async (id) => {
+    const rec = await Model.findById(id);
+    if (!rec)
+        throw new ApiError(httpStatus.NOT_FOUND, RECORD_NOT_FOUND);
 
+    return rec;
+};
 const deleteById = async (id) => {
     const rec = await Model.findByIdAndDelete(id);
     if (!rec)
@@ -35,7 +58,7 @@ export const MyRouteService = {
     create,
     updateById,
     deleteById,
-    list
+    list, addIdToChildren, getDataById, removeChildById
 }
 
 export default MyRouteService;

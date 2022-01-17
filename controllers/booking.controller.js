@@ -21,7 +21,7 @@ const createBooking = catchAsync(
 const getBookings = catchAsync(
     async (req, res) => {
         const { user } = res.locals;
-        const { filterByStatus, filterByUser, sortBy = 'DateSubmitted', sortType = "asc", keyword, limit = 10, page } = req.query;
+        const { filterByStatus, filterByRoute, filterByUser, sortBy = 'DateSubmitted', sortType = "asc", keyword, limit = 10, page } = req.query;
         let filterByUserId = filterByUser;
         let filter;
         let mSortyBy = {};
@@ -57,7 +57,14 @@ const getBookings = catchAsync(
             else if (!filter)
                 filter = { "userId": filterByUserId };
         }
-
+        if (filterByRoute) {
+            if (filter && filter['$and']) {
+                filter['$and'].push({ "routes": { "$ne": filterByRoute } })
+            }
+            else if (filter && !filter['$and']) {
+                filter['$and'] = [{ "routes": { "$ne": filterByRoute } }];
+            }
+        }
         const results = await bookingService.list(filter, { sortBy: mSortyBy, limit, page });
         res.status(httpStatus.CREATED).send(results);
 
